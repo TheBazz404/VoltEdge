@@ -26,7 +26,7 @@ class InvoiceRequest(BaseModel):
     breakdown: dict = {}
 
 
-# Simpel tariff: 2.45 DKK/kWh + 0.50 DKK/min parking after 10 min free
+# Simple tariff: 2.45 DKK/kWh + 0.50 DKK/min parking after 10 min free
 ENERGY_RATE = 2.45  # DKK per kWh
 PARKING_RATE = 0.50  # DKK per minute after 10 free minutes
 PARKING_FREE_MINUTES = 10

@@ -9,10 +9,21 @@
 - [x] **Step 1c:** Genskab README.md
 - [x] **Step 2:** Opret `.gitignore` + initialiser git lokalt
 - [x] **Step 3:** Opret Python-app (`src/` struktur + main.py + 3 services)
-- [x] **Step 3b:** Opret `docs/kode_reference.md` (din personlige reference)
-- [x] **Step 4:** Commit + push til GitHub (`main` branch) ✅
-- [ ] **Step 5:** Forbind Azure Web App til GitHub (deployment source)
-- [ ] **Step 6:** Sæt startup command i Web App (✅ allerede gjort)
-- [ ] **Step 7:** Test at deployment og /health virker
-- [ ] **Step 8:** Opret tests + Postman collection + CI/CD workflow
+- [x] **Step 3b:** Opret `docs/kode_reference.md`
+- [x] **Step 4:** Commit + push til GitHub (`main` branch)
+- [x] **Step 5:** Forbind Azure Web App til GitHub (deployment source)
+- [x] **Step 6:** Sæt startup command i Web App
+- [x] **Step 7:** **Deployment SUCCES — /health virker!** ✅
+- [x] **Step 8a:** Opret tests (19 tests)
+- [x] **Step 8b:** Opret Postman collection (12 requests)
+- [x] **Step 8c:** Opret `docs/log.md` — fremdriftslog
+- [x] **Step 8d:** README.md oversat til engelsk
 - [ ] **Step 9:** Opsæt database (PostgreSQL)
+- [ ] **Step 10:** 🔥 SLET før aflevering:
+  - `tests/` mappe
+  - `postman/` mappe
+  - `docs/` mappe
+  - `liste.md`
+
+> **Påmindelse:** Step 10 sletter tests/, postman/, docs/ og liste.md før aflevering.
+> Kun kode, README.md, MVP.md og .github/workflows bliver tilbage.

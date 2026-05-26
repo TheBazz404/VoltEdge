@@ -16,7 +16,7 @@ from shared.events import (
 
 router = APIRouter(prefix="/sessions", tags=["sessions"])
 
-# In-memory storage (PostgreSQL er valgfri — miljøvariabel styrer)
+# In-memory storage (PostgreSQL is optional — controlled by DATABASE_URL env var)
 sessions: dict[str, ChargingSessionData] = {}
 
 
