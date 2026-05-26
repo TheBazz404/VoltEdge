@@ -1,14 +1,8 @@
 """VoltEdge MVP — Combined FastAPI Application
 
-All 3 services kører i én Azure Web App.
-Hver service har sit eget URL-præfiks.
+All 3 services run in a single Azure Web App.
+Each service has its own URL prefix.
 """
-
-import sys
-from pathlib import Path
-
-# Ensure src/ is on sys.path so all service packages are importable
-sys.path.insert(0, str(Path(__file__).parent))
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
