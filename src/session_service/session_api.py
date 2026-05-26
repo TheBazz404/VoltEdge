@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from typing import Optional
 
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from shared.events import (
     ChargingSessionData,
@@ -21,13 +21,13 @@ sessions: dict[str, ChargingSessionData] = {}
 
 
 class StartSessionRequest(BaseModel):
-    charger_id: str
-    contract_id: str
+    charger_id: str = Field(examples=["charger-1"])
+    contract_id: str = Field(examples=["contract-1"])
 
 
 class CompleteSessionRequest(BaseModel):
-    energy_delivered: float
-    duration_minutes: int
+    energy_delivered: float = Field(examples=[25.5])
+    duration_minutes: int = Field(examples=[60])
 
 
 @router.get("/health")

@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from shared.events import SessionRated, InvoiceLineCreated
 
@@ -12,16 +12,16 @@ router = APIRouter(prefix="/billing", tags=["billing"])
 
 
 class RateRequest(BaseModel):
-    session_id: str
-    energy_delivered: float
-    duration_minutes: int
-    charger_id: str
-    contract_id: str
+    session_id: str = Field(examples=["86c80cc7-47a9-48a0-901d-5dfc4f38c399"])
+    energy_delivered: float = Field(examples=[25.5])
+    duration_minutes: int = Field(examples=[60])
+    charger_id: str = Field(examples=["charger-1"])
+    contract_id: str = Field(examples=["contract-1"])
 
 
 class InvoiceRequest(BaseModel):
-    session_id: str
-    total_cost: float
+    session_id: str = Field(examples=["86c80cc7-47a9-48a0-901d-5dfc4f38c399"])
+    total_cost: float = Field(examples=[92.50])
     currency: str = "DKK"
     breakdown: dict = {}
 

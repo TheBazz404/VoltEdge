@@ -4,7 +4,7 @@ import math
 from datetime import datetime, timezone
 
 from fastapi import APIRouter
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sklearn.linear_model import LinearRegression
 import numpy as np
 
@@ -12,13 +12,13 @@ router = APIRouter(prefix="/analytics", tags=["analytics"])
 
 
 class PredictRequest(BaseModel):
-    duration_minutes: int
+    duration_minutes: int = Field(examples=[60])
 
 
 class DetectRequest(BaseModel):
-    session_id: str
-    energy_delivered: float
-    duration_minutes: int
+    session_id: str = Field(examples=["test-1"])
+    energy_delivered: float = Field(examples=[2.0])
+    duration_minutes: int = Field(examples=[60])
 
 
 class AnomalyResult(BaseModel):
