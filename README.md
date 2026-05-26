@@ -159,23 +159,38 @@ Sessions deviating >40% from expected are flagged as **anomalies**.
 
 ## Getting Started (Local Development)
 
-### Setup environment
+### Prerequisites
+
+- **Python 3.12+** installed ([python.org](https://python.org))
+- **Git** installed ([git-scm.com](https://git-scm.com))
+- A terminal (PowerShell, bash, etc.)
+
+### Step-by-step setup from scratch
 
 ```bash
+# 1. Clone the repository
+git clone https://github.com/Lula0002/VoltEdge.git
+cd VoltEdge
+
+# 2. Create a virtual environment
 python -m venv venv
-.\venv\Scripts\Activate  # Windows
-# source venv/bin/activate  # Mac/Linux
-```
 
-### Option A — Run all services together (recommended)
+# 3. Activate it
+.\venv\Scripts\Activate     # Windows
+# source venv/bin/activate  # Mac / Linux
 
-```bash
+# 4. Install dependencies
 cd src
 pip install -r requirements.txt
+
+# 5. Start the server (all 3 services in one app)
 uvicorn main:app --reload --port 8000
+
+# 6. Open Swagger UI in your browser:
+#    http://localhost:8000/docs
 ```
 
-👉 Swagger UI: [http://localhost:8000/docs](http://localhost:8000/docs)
+That's it — the SQLite database is created automatically on first request.
 
 ### Option B — Run services individually
 
@@ -202,7 +217,9 @@ uvicorn analytics_api:app --reload --port 8002
 
 ### Happy Path via Swagger
 
-1. Open: `https://voltedge-app-fqgdacaadyd9axds.germanywestcentral-01.azurewebsites.net/docs`
+1. Open Swagger UI:
+   - **Local:** `http://localhost:8000/docs`
+   - **Live:** `https://voltedge-app-fqgdacaadyd9axds.germanywestcentral-01.azurewebsites.net/docs`
 2. Run requests in sequence:
 
 **Step 1 — Start session:**
@@ -235,25 +252,30 @@ POST /billing/invoice
 
 ### Test with curl
 
+Replace `http://localhost:8000` with the Azure URL if testing the live deployment.
+
 ```bash
 # Health check
-curl https://voltedge-app-fqgdacaadyd9axds.germanywestcentral-01.azurewebsites.net/health
+curl http://localhost:8000/health
 
 # Start a session
-curl -X POST https://voltedge-app-fqgdacaadyd9axds.germanywestcentral-01.azurewebsites.net/sessions/start \
+curl -X POST http://localhost:8000/sessions/start \
   -H "Content-Type: application/json" \
   -d '{"charger_id": "charger-1", "contract_id": "contract-1"}'
 
 # ML prediction
-curl -X POST https://voltedge-app-fqgdacaadyd9axds.germanywestcentral-01.azurewebsites.net/analytics/predict \
+curl -X POST http://localhost:8000/analytics/predict \
   -H "Content-Type: application/json" \
   -d '{"duration_minutes": 60}'
 
 # ML anomaly detection
-curl -X POST https://voltedge-app-fqgdacaadyd9axds.germanywestcentral-01.azurewebsites.net/analytics/detect \
+curl -X POST http://localhost:8000/analytics/detect \
   -H "Content-Type: application/json" \
   -d '{"session_id": "test-1", "energy_delivered": 2.0, "duration_minutes": 60}'
 ```
+
+**Live deployment URL:**  
+`https://voltedge-app-fqgdacaadyd9axds.germanywestcentral-01.azurewebsites.net`
 
 ---
 
