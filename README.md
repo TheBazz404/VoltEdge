@@ -49,8 +49,6 @@ All 3 services run in a **single Azure Web App** and are accessible via URL pref
 
 👉 **Swagger UI:** [https://voltedge-app-fqgdacaadyd9axds.germanywestcentral-01.azurewebsites.net/docs](https://voltedge-app-fqgdacaadyd9axds.germanywestcentral-01.azurewebsites.net/docs)
 
-Det ensartede datagrundlag udgør dermed kernen i VoltEdges differentering på markedet som en data-driven platform. Samtidig er der et bevidst valg i den efterfølgende implementering. Selvom differenteringen ligger i datakæden og i optimering, fokuserer MVP'en i stedet for på afregningsporet (telemetri → session → pris → faktura), fordi det giver det reneste end-to-end flow at vise teknisk. De kritiske kapabiliteter ligger i kernesubdomænet "Driftsoptimering" og det understøttende "Driftsindsigt", mens MVP'ens afregningskæde demonstreres i sammenspillet mellem det core og det generiske subdomæne, hvilket vil blive uddybet i afsnit 3 og 4.
-
 ---
 
 ## Tech Stack
