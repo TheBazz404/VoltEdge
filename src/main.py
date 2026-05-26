@@ -15,7 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
     title="VoltEdge Mobility MVP API",
-    description="Automated billing & settlement — Happy Path: SessionStarted → SessionValidated → PriceCalculated → InvoiceGenerated",
+    description="Automated billing & settlement — Happy Path: SessionStarted → SessionValidated → PriceCalculated → InvoiceLineGenerated",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
@@ -29,10 +29,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-@app.get("/health")
-async def root_health():
-    return {"status": "healthy", "app": "voltige-mvp", "version": "1.0.0"}
 
 
 # Import and register service routers

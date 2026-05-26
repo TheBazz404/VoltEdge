@@ -6,7 +6,10 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
-from shared.events import PriceCalculated, InvoiceGenerated
+from shared.events import SessionStatus, PriceCalculated, InvoiceLineGenerated
+from shared.database import get_connection, execute, init_db
+
+init_db()
 
 router = APIRouter(prefix="/billing", tags=["billing"])
 
@@ -32,13 +35,27 @@ PARKING_RATE = 0.50  # DKK per minute after 10 free minutes
 PARKING_FREE_MINUTES = 10
 
 
-@router.get("/health")
-async def health():
-    return {"status": "healthy", "service": "billing-service"}
-
-
 @router.post("/rate", response_model=PriceCalculated)
 async def rate_session(req: RateRequest):
+    # Check session exists and is completed
+    conn = get_connection()
+    cursor = execute(conn, "SELECT * FROM sessions WHERE session_id = ?", (req.session_id,))
+    row = cursor.fetchone()
+    cursor.close()
+
+    if not row:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    session_status = row["status"]
+    if session_status != SessionStatus.COMPLETED.value:
+        conn.close()
+        raise HTTPException(
+            status_code=400,
+            detail=f"Cannot rate session in status '{session_status}'. Must be 'Completed'.",
+        )
+
+    # Calculate price
     energy_cost = round(req.energy_delivered * ENERGY_RATE, 2)
     billable_parking = max(0, req.duration_minutes - PARKING_FREE_MINUTES)
     parking_cost = round(billable_parking * PARKING_RATE, 2)
@@ -52,6 +69,15 @@ async def rate_session(req: RateRequest):
         "billable_parking_minutes": billable_parking,
     }
 
+    # Update session status to Rated and store total_cost
+    execute(
+        conn,
+        "UPDATE sessions SET status = ?, total_cost = ? WHERE session_id = ?",
+        (SessionStatus.RATED.value, total_cost, req.session_id),
+    )
+    conn.commit()
+    conn.close()
+
     return PriceCalculated(
         session_id=req.session_id,
         total_cost=total_cost,
@@ -61,11 +87,38 @@ async def rate_session(req: RateRequest):
     )
 
 
-@router.post("/invoice", response_model=InvoiceGenerated)
+@router.post("/invoice", response_model=InvoiceLineGenerated)
 async def create_invoice(req: InvoiceRequest):
+    # Check session exists and is rated
+    conn = get_connection()
+    cursor = execute(conn, "SELECT * FROM sessions WHERE session_id = ?", (req.session_id,))
+    row = cursor.fetchone()
+    cursor.close()
+
+    if not row:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    session_status = row["status"]
+    if session_status != SessionStatus.RATED.value:
+        conn.close()
+        raise HTTPException(
+            status_code=400,
+            detail=f"Cannot invoice session in status '{session_status}'. Must be 'Rated'.",
+        )
+
     invoice_id = str(uuid.uuid4())
 
-    return InvoiceGenerated(
+    # Update session status to Invoiced and store invoice_id
+    execute(
+        conn,
+        "UPDATE sessions SET status = ?, invoice_id = ? WHERE session_id = ?",
+        (SessionStatus.INVOICED.value, invoice_id, req.session_id),
+    )
+    conn.commit()
+    conn.close()
+
+    return InvoiceLineGenerated(
         session_id=req.session_id,
         invoice_id=invoice_id,
         amount=req.total_cost,

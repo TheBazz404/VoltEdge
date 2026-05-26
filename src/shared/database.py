@@ -97,7 +97,9 @@ def init_db():
                 start_time     VARCHAR(50),
                 end_time       VARCHAR(50),
                 energy_delivered DOUBLE,
-                duration_minutes INT
+                duration_minutes INT,
+                total_cost DOUBLE,
+                invoice_id VARCHAR(36)
             )
         """)
     else:
@@ -110,7 +112,9 @@ def init_db():
                 start_time       TEXT,
                 end_time         TEXT,
                 energy_delivered  REAL,
-                duration_minutes  INTEGER
+                duration_minutes  INTEGER,
+                total_cost       REAL,
+                invoice_id       TEXT
             )
         """)
 

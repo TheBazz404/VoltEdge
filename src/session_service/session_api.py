@@ -39,12 +39,10 @@ def _session_from_row(row) -> ChargingSessionData:
         end_time=datetime.fromisoformat(row["end_time"]) if row["end_time"] else None,
         energy_delivered=row["energy_delivered"],
         duration_minutes=row["duration_minutes"],
+        total_cost=row["total_cost"],
+        invoice_id=row["invoice_id"],
     )
 
-
-@router.get("/health")
-async def health():
-    return {"status": "healthy", "service": "session-service"}
 
 
 @router.post("/start", response_model=SessionStarted)
@@ -153,6 +151,17 @@ async def complete_session(session_id: str, req: CompleteSessionRequest):
         duration_minutes=req.duration_minutes,
         timestamp=now,
     )
+
+
+@router.get("/")
+async def list_sessions():
+    """Return all sessions ordered by creation time (newest first)."""
+    conn = get_connection()
+    cursor = execute(conn, "SELECT * FROM sessions ORDER BY start_time DESC")
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return [_session_from_row(r) for r in rows]
 
 
 @router.get("/{session_id}")

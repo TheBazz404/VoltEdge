@@ -11,6 +11,8 @@ class SessionStatus(str, Enum):
     AUTHORIZED = "Authorized"
     CHARGING = "Charging"
     COMPLETED = "Completed"
+    RATED = "Rated"
+    INVOICED = "Invoiced"
 
 
 class ChargingSessionData(BaseModel):
@@ -22,6 +24,8 @@ class ChargingSessionData(BaseModel):
     end_time: Optional[datetime] = None
     energy_delivered: Optional[float] = None
     duration_minutes: Optional[int] = None
+    total_cost: Optional[float] = None
+    invoice_id: Optional[str] = None
 
 
 class SessionStarted(BaseModel):
@@ -48,7 +52,7 @@ class PriceCalculated(BaseModel):
     timestamp: datetime
 
 
-class InvoiceGenerated(BaseModel):
+class InvoiceLineGenerated(BaseModel):
     session_id: str
     invoice_id: str
     amount: float

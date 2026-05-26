@@ -23,14 +23,14 @@ This project demonstrates a **fully traceable data flow** from telemetry to invo
 ## Happy Path (4 steps)
 
 ```
-SessionStarted → SessionValidated → PriceCalculated → InvoiceGenerated
+SessionStarted → SessionValidated → PriceCalculated → InvoiceLineGenerated
 ```
 
 Each event represents a step in the billing chain:
 1. **SessionStarted** — A vehicle connects to a charger
 2. **SessionValidated** — Charging is completed with metered data
 3. **PriceCalculated** — Price is calculated based on tariff rules
-4. **InvoiceGenerated** — An invoice line is generated
+4. **InvoiceLineGenerated** — An invoice line is generated
 
 ---
 
@@ -82,7 +82,7 @@ Swagger at: `http://localhost:8000/docs`
 
 #### `src/shared/events.py`
 **Shared event models** used across all services:  
-`SessionStarted`, `SessionValidated`, `PriceCalculated`, `InvoiceGenerated`
+`SessionStarted`, `SessionValidated`, `PriceCalculated`, `InvoiceLineGenerated`
 
 #### `src/shared/database.py`
 **Database helper** — MySQL (production) with SQLite fallback (local dev).  
@@ -116,7 +116,7 @@ Swagger at: `http://localhost:8000/docs`
 |---|---|
 | `GET /billing/health` | Health check |
 | `POST /billing/rate` | Calculate price: 2.45 DKK/kWh + 0.50 DKK/min after 10 free min |
-| `POST /billing/invoice` | Create invoice → emit `InvoiceGenerated` |
+| `POST /billing/invoice` | Create invoice → emit `InvoiceLineGenerated` |
 
 **Pricing logic:**
 - Energy: 2.45 DKK/kWh
